@@ -49,6 +49,7 @@ static NSError * AFAuthErrorWithResponseObject(NSDictionary *responseObject) {
     NSError *error = [NSError errorWithDomain:AFOAuth2ClientErrorDomain
                                          code:AFOAuth2ClientErrorCode
                                      userInfo:@{AFOAuth2ClientErrorKey : responseObject ?: @{}}];
+    return error;
 }
 
 #pragma mark -
