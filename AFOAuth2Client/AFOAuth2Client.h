@@ -297,3 +297,10 @@ extern NSString * const kAFOAuthCodeGrantType;
 extern NSString * const kAFOAuthClientCredentialsGrantType;
 extern NSString * const kAFOAuthPasswordCredentialsGrantType;
 extern NSString * const kAFOAuthRefreshGrantType;
+
+/**
+ ## Error
+ */
+extern NSString * const AFOAuth2ClientErrorDomain;
+extern NSString * const AFOAuth2ClientErrorKey;
+extern NSInteger  const AFOAuth2ClientErrorCode;

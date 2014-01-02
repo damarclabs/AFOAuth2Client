@@ -27,8 +27,12 @@
 NSString * const kAFOAuthCodeGrantType = @"authorization_code";
 NSString * const kAFOAuthClientCredentialsGrantType = @"client_credentials";
 NSString * const kAFOAuthPasswordCredentialsGrantType = @"password";
-NSString *const kAFOAuthPasswordCredentialsResponseType = @"code";
+NSString * const kAFOAuthPasswordCredentialsResponseType = @"code";
 NSString * const kAFOAuthRefreshGrantType = @"refresh_token";
+
+NSString * const AFOAuth2ClientErrorDomain = @"AFOAuth2ClientErrorDomain";
+NSString * const AFOAuth2ClientErrorKey = @"AFOAuth2ClientErrorKey";
+NSInteger const AFOAuth2ClientErrorCode = 401;
 
 #ifdef _SECURITY_SECITEM_H_
 NSString * const kAFOAuthCredentialServiceName = @"AFOAuthCredentialService";
@@ -40,6 +44,12 @@ static NSMutableDictionary * AFKeychainQueryDictionaryWithIdentifier(NSString *i
     return queryDictionary;
 }
 #endif
+
+static NSError * AFAuthErrorWithResponseObject(NSDictionary *responseObject) {
+    NSError *error = [NSError errorWithDomain:AFOAuth2ClientErrorDomain
+                                         code:AFOAuth2ClientErrorCode
+                                     userInfo:@{AFOAuth2ClientErrorKey : responseObject ?: @{}}];
+}
 
 #pragma mark -
 
@@ -177,9 +187,8 @@ static NSMutableDictionary * AFKeychainQueryDictionaryWithIdentifier(NSString *i
     AFHTTPRequestOperation *requestOperation = [self HTTPRequestOperationWithRequest:mutableRequest success:^(AFHTTPRequestOperation *operation, id responseObject) {
         if ([responseObject valueForKey:@"error"]) {
             if (failure) {
-                // TODO: Resolve the `error` field into a proper NSError object
-                // http://tools.ietf.org/html/rfc6749#section-5.2
-                failure(nil);
+                NSError *error = AFAuthErrorWithResponseObject(responseObject);
+                failure(error);
             }
             
             return;
