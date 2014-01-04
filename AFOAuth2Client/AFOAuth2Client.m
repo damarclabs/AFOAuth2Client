@@ -216,6 +216,15 @@ static NSError * AFAuthErrorWithResponseObject(NSDictionary *responseObject) {
             success(credential);
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        if ([operation.responseObject valueForKey:@"error"]) {
+            if (failure) {
+                NSError *error = AFAuthErrorWithResponseObject(responseObject);
+                failure(error);
+            }
+            
+            return;
+        }
+        
         if (failure) {
             failure(error);
         }
