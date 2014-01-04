@@ -218,8 +218,8 @@ static NSError * AFAuthErrorWithResponseObject(NSDictionary *responseObject) {
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         if ([operation.responseObject valueForKey:@"error"]) {
             if (failure) {
-                NSError *error = AFAuthErrorWithResponseObject(operation.responseObject);
-                failure(error);
+                NSError *authError = AFAuthErrorWithResponseObject(operation.responseObject);
+                failure(authError);
             }
             
             return;
